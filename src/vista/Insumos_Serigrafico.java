@@ -4,8 +4,14 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -18,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DateFormatter;
 
 import controlador.InsumoAction;
 import controlador.SerigrafiadoAction;
@@ -40,10 +47,13 @@ public class Insumos_Serigrafico implements ActionListener {
 	
 	DefaultTableModel model=new DefaultTableModel();
 	SerigrafiadoAction obj= new SerigrafiadoAction();
-	private ArrayList<insumo> lista; 
-	private int cod_insumo;
+	InsumoAction obj2= new InsumoAction();
+	private ArrayList<serigrafiado> lista; 
+	private ArrayList<insumo> listas; 
+	private int id_serigrafiado;
 
 	Insumos_Botella Ib = new Insumos_Botella();
+	private Date fecha;
 
 	/**
 	 * Launch the application.
@@ -84,8 +94,7 @@ public class Insumos_Serigrafico implements ActionListener {
 
 		cboBotella = new JComboBox();
 		cboBotella.addActionListener(this);
-		cboBotella.setModel(new DefaultComboBoxModel(new String[] { "Seleccione ...", "botella 350 ml",
-				"botella 500 ml", "botella 700 ml", "botella 1.0 Lt", "botella 1.4 Lt" }));
+		cboBotella.setModel(new DefaultComboBoxModel(new String[] {"Seleccione ..."}));
 		cboBotella.setBounds(134, 87, 333, 22);
 		frame.getContentPane().add(cboBotella);
 
@@ -157,6 +166,11 @@ public class Insumos_Serigrafico implements ActionListener {
 		btnAdicionar.addActionListener(this);
 		btnAdicionar.setBounds(477, 87, 120, 22);
 		frame.getContentPane().add(btnAdicionar);
+		
+		this.llenarCabecera();
+		this.llenarDatosTabla();
+		this.llenarDatosCombo();
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -165,13 +179,13 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 
 		if (e.getSource() == cboBotella) {
-			cboBotellaActionPerformed(e);
+			llenarDatosCombo();
 		}
 		if (e.getSource() == btnExportar) {
 			btnExportarActionPerformed(e);
 		}
 		if (e.getSource() == btnCancelar) {
-			
+			cancelar();
 		}
 		if (e.getSource() == btnRegistrar) {
 
@@ -185,19 +199,44 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 
 	}
+	
+
+	protected void btnExportarActionPerformed(ActionEvent e) {
+
+	}
+
 
 	protected void cboBotellaActionPerformed(ActionEvent e) {
 
 	}
 
+	protected void cancelar() {
+		
+	}
+	
 	protected int grabar() {
-
-		int cantSalida = Integer.parseInt(txtSalida.getText());
-		int cantIngreso = Integer.parseInt(txtIngreso.getText());
-
-		int merma = cantSalida - cantIngreso;
+		int grabo=0;
+		
+		int botella = cboBotella.getSelectedIndex();
+		int cantSalidas = Integer.parseInt(txtSalida.getText());
+		int cantIngresos = Integer.parseInt(txtIngreso.getText());
+		int merma = cantSalidas - cantIngresos;
+		int fecha = SimpleDateFormat.MEDIUM;
+		
+		serigrafiado s = new serigrafiado(id_serigrafiado,0,0, null,0,null,0,0);
+		
+		s.setInsumo(botella);
+		s.setCantSalida(cantSalidas);
+		s.setCantIngreso(cantIngresos);
+		s.setMerma(merma);
+		s.setFecha(fecha);
+		
+		
 		JOptionPane.showMessageDialog(null, merma + " de merma");
-		return merma;
+		JOptionPane.showMessageDialog(null, merma + " de merma");
+		
+		grabo=obj.ingresarSerigrafiado(s);
+		return grabo;
 
 	}
 
@@ -208,33 +247,6 @@ public class Insumos_Serigrafico implements ActionListener {
 		txtGuiaSalida.setText("");
 		txtIngreso.setText("");
 		txtGuiaIngreso.setText("");
-
-	}
-
-	protected void btnExportarActionPerformed(ActionEvent e) {
-
-	}
-
-	private void listar() {
-		List<serigrafiado> lista = new ArrayList<serigrafiado>();
-		SerigrafiadoAction action = new SerigrafiadoAction();
-
-		lista = action.listar();
-
-		// Agregar la lista al JTable
-		// Obtener el modelo de la tabla
-		DefaultTableModel modelo = (DefaultTableModel) tbRegistro.getModel();
-
-		// Limpiamos los datos del modelo
-		modelo.getDataVector().clear();
-
-		// Agregar datos
-		for (serigrafiado serigrafiado : lista) {
-			Object[] row = { serigrafiado.getFecha(), serigrafiado.getCantSalida(), serigrafiado.getGuiaSalida(),
-					serigrafiado.getCantSalida(), serigrafiado.getGuiaIngreso(), serigrafiado.getMerma() };
-
-			modelo.addRow(row);
-		}
 
 	}
 
@@ -250,13 +262,22 @@ public class Insumos_Serigrafico implements ActionListener {
 
 	private void llenarDatosTabla() {
 		model.setRowCount(0);
-		lista = obj.listarInsumo(null);
-		for (insumo p : lista) {
-			Object Fila[] = { p.getCod_insumo(), p.getDescripcion(),
+		lista = obj.ListarSerigrafiado(null);
+		for (serigrafiado p : lista) {
+			Object Fila[] = { p.getFecha(), p.getCantSalida(),p.getGuiaSalida(),p.getCantIngreso(),p.getGuiaIngreso(),p.getMerma()
 
 			};
 			model.addRow(Fila);
 		}
+	}
+	
+	private void llenarDatosCombo() {
+		cboBotella.setSelectedItem(0);
+		listas = obj2.listarInsumo(null);
+		for (insumo p : listas) {
+			cboBotella.addItem(p.getDescripcion());
+		}
+			
 	}
 
 	private void mostrarmensaje(String s) {

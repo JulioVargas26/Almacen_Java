@@ -23,6 +23,10 @@ import javax.swing.SwingConstants;
 
 public class Insumos_Botella extends JFrame implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtDescripcion;
 	private JButton btnRegistrar;
@@ -41,6 +45,7 @@ private int cod_insumo;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					Insumos_Botella frame = new Insumos_Botella();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -100,14 +105,12 @@ private int cod_insumo;
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnCancelar) {
-			btnCancelarActionPerformed(e);
+			dispose();
 		}
 		if (e.getSource() == btnRegistrar) {
 			int grabo = grabar();
 			if(grabo==1)
 				mostrarmensaje("si grabo");
-			else
-				mostrarmensaje("que pena");
 			this.llenarDatosTabla();
 			this.txtDescripcion.setText("");
 		}
@@ -118,12 +121,14 @@ private int cod_insumo;
 		insumo p = new insumo(cod_insumo, null);
 		p.setDescripcion(this.txtDescripcion.getText());
 		
+		if(txtDescripcion.getText().length()!=0) {
 		grabo=obj.ingresarInsumo(p);
-		return grabo;
-	}
-	protected void btnCancelarActionPerformed(ActionEvent e) {
-		dispose();
+		}
+		else {
+			mostrarmensaje("ingrese dato");
+		}
 		
+		return grabo;
 	}
 	
 	private void llenarCabecera(){
@@ -138,8 +143,6 @@ private int cod_insumo;
 			Object Fila[]={
 					p.getCod_insumo(),
 					p.getDescripcion(),
-					
-					
 			};
 			model.addRow(Fila);
 		}

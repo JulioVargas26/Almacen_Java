@@ -3,23 +3,19 @@ package entidad;
 public class serigrafiado {
 	
 	public int id_serigrafiado,insumo,cantSalida,cantIngreso,merma;
-	public String guiaSalida,guiaIngreso,fecha;
+	public String guiaSalida,guiaIngreso;
+	public int fecha;
 
-	public serigrafiado(int id_serigrafiado, int insumo, int cantSalida, int cantIngreso, int merma, String guiaSalida,
-			String guiaIngreso, String fecha) {
+	public serigrafiado(int id_serigrafiado, int insumo, int cantSalida, String guiaSalida, int cantIngreso, String guiaIngreso,
+			int merma, int fecha) {
 		this.id_serigrafiado = id_serigrafiado;
 		this.insumo = insumo;
 		this.cantSalida = cantSalida;
-		this.cantIngreso = cantIngreso;
-		this.merma = merma;
 		this.guiaSalida = guiaSalida;
+		this.cantIngreso = cantIngreso;
 		this.guiaIngreso = guiaIngreso;
+		this.merma = merma;
 		this.fecha = fecha;
-	}
-
-	public serigrafiado() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public int getId_serigrafiado() {
@@ -78,13 +74,15 @@ public class serigrafiado {
 		this.guiaIngreso = guiaIngreso;
 	}
 
-	public String getFecha() {
+	public int getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(String fecha) {
+	public void setFecha(int fecha) {
 		this.fecha = fecha;
 	}
+
+	
 
 	
 

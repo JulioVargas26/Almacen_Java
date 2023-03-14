@@ -6,21 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entidad.insumo;
 import entidad.serigrafiado;
 import util.ConexionMySql;
 
-/*
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import entidad.serigrafiado;
-import util.ConexionMySql;
-*/
 public class SerigrafiadoAction {
 
 	// Definir los métodos que interactuarán con la BD:
@@ -38,6 +26,12 @@ public class SerigrafiadoAction {
 			
 			String sql = "INSERT INTO tb_serigrafiado VALUES (null, ?,?,?,?,?,?)";
 			pstm = cn.prepareStatement(sql);
+			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(1, s.getInsumo());
 			pstm.setInt(1, s.getInsumo());
 			
 			ingresar = pstm.executeUpdate();
@@ -64,8 +58,8 @@ public class SerigrafiadoAction {
 		return ingresar;
 	}
 	
-	public ArrayList<insumo> listarInsumo(insumo insumo){
-		ArrayList<insumo> lista = new ArrayList<insumo>();
+	public ArrayList<serigrafiado> ListarSerigrafiado(serigrafiado serigrafiado){
+		ArrayList<serigrafiado> lista = new ArrayList<serigrafiado>();
 		Connection cn = null;
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
@@ -73,13 +67,19 @@ public class SerigrafiadoAction {
 		try{
 			
 			cn = new ConexionMySql().getConexion();
-			String sql = "SELECT * FROM tb_insumo;";
+			String sql = "SELECT * FROM tb_serigrafiado";
 			pstm = cn.prepareStatement(sql);
 			rs = pstm.executeQuery();
 			
 			while(rs.next()){
-				insumo obj = new insumo(rs.getInt(1), 
-									rs.getString(2));
+				serigrafiado obj = new serigrafiado(rs.getInt(1), 
+									rs.getInt(2),
+						rs.getInt(3),
+						rs.getString(4),
+						rs.getInt(5),
+						rs.getString(6),
+						rs.getInt(7),
+						rs.getInt(8));
 				
 				lista.add(obj);
 			
@@ -103,7 +103,48 @@ public class SerigrafiadoAction {
 		return lista;
 	}
 		
-		/**public int eliminar(int id){
+	public serigrafiado obtener(int id){
+		serigrafiado obj = null;
+		
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT * FROM tb_serigrafiado WHERE insumo = ?";
+			conn = new ConexionMySql().getConexion();
+			pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, id);
+			rs = pstm.executeQuery();
+			while (rs.next()) {
+				obj = new serigrafiado(rs.getInt(1), 
+						rs.getInt(2),
+			rs.getInt(3),
+			rs.getString(4),
+			rs.getInt(5),
+			rs.getString(6),
+			rs.getInt(7),
+			rs.getInt(8));
+			
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				if(rs != null)
+					rs.close();
+				if(pstm != null)
+					pstm.close();
+				if(conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return obj;
+	}
+	
+	/**public int eliminar(int id){
 			int salida = -1;
 			
 			Connection conn = null;
@@ -133,50 +174,6 @@ public class SerigrafiadoAction {
 			}
 			return salida;
 		}
-		
-		public Administrado obtener(int id){
-			Administrado obj = null;
-			
-			Connection conn = null;
-			PreparedStatement pstm = null;
-			ResultSet rs = null;
-			
-			try {
-				String sql = "SELECT * FROM tb_administrado WHERE idadministrado = ?";
-				conn = MySqlDBConexion.getConexion();
-				pstm = conn.prepareStatement(sql);
-				pstm.setInt(1, id);
-				rs = pstm.executeQuery();
-				while (rs.next()) {
-					obj = new Administrado();
-					obj.setIdadministrado(rs.getInt("idadministrado"));
-					obj.setNombres(rs.getString("nombres"));
-					obj.setApellidos(rs.getString("apellidos"));
-					obj.setDni(rs.getString("dni"));	
-					obj.setDireccion(rs.getString("direccion"));	
-					obj.setTelefono(rs.getString("telefono"));
-					obj.setEmail(rs.getString("email"));
-					obj.setDistrito(rs.getString("distrito"));
-					obj.setFechaIngres(rs.getString("fecha"));
-				
-				}		
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally{
-				try {
-					if(rs != null)
-						rs.close();
-					if(pstm != null)
-						pstm.close();
-					if(conn != null)
-						conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return obj;
-		}
-		
 		public int actualizar(Administrado obj){
 			int salida = 0;
 			

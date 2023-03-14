@@ -5,35 +5,39 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema Basa
+-- Schema mydb
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `Basa` ;
+-- -----------------------------------------------------
+-- Schema basa
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `basa` ;
 
 -- -----------------------------------------------------
--- Schema Basa
+-- Schema basa
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `Basa` DEFAULT CHARACTER SET utf8 ;
-USE `Basa` ;
+CREATE SCHEMA IF NOT EXISTS `basa` DEFAULT CHARACTER SET utf8mb3 ;
+USE `basa` ;
 
 -- -----------------------------------------------------
--- Table `Basa`.`tb_insumo`
+-- Table `basa`.`tb_insumo`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Basa`.`tb_insumo` ;
+DROP TABLE IF EXISTS `basa`.`tb_insumo` ;
 
-CREATE TABLE IF NOT EXISTS `Basa`.`tb_insumo` (
-  `id_insumo` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `basa`.`tb_insumo` (
+  `id_insumo` INT NOT NULL AUTO_INCREMENT,
   `descripcion` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id_insumo`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `Basa`.`tb_serigrafiado`
+-- Table `basa`.`tb_serigrafiado`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Basa`.`tb_serigrafiado` ;
+DROP TABLE IF EXISTS `basa`.`tb_serigrafiado` ;
 
-CREATE TABLE IF NOT EXISTS `Basa`.`tb_serigrafiado` (
-  `id_serigrafiado` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `basa`.`tb_serigrafiado` (
+  `id_serigrafiado` INT NOT NULL AUTO_INCREMENT,
   `insumo` INT NOT NULL,
   `cantSalida` INT NOT NULL,
   `guiaSalida` VARCHAR(45) NOT NULL,
@@ -45,17 +49,11 @@ CREATE TABLE IF NOT EXISTS `Basa`.`tb_serigrafiado` (
   INDEX `fk_serigrafiado_insumo_idx` (`insumo` ASC) VISIBLE,
   CONSTRAINT `fk_serigrafiado_insumo`
     FOREIGN KEY (`insumo`)
-    REFERENCES `Basa`.`tb_insumo` (`id_insumo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    REFERENCES `basa`.`tb_insumo` (`id_insumo`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
-
-INSERT INTO `basa`.`tb_insumo` (`id_insumo`, `descripcion`) VALUES ('0302615', 'botella 350');
-
-
-INSERT INTO `basa`.`tb_serigrafiado` (`id_serigrafiado`, `insumo`, `cantSalida`, `guiaSalida`, `cantIngreso`, `guiaIngreso`, `merma`, `fecha`) 
-VALUES ('1256498', '1', '12000', '1200-232', '11998', '1500-562', '2', '2023-02-12');
+INSERT INTO `basa`.`tb_serigrafiado` (`insumo`, `cantSalida`, `guiaSalida`, `cantIngreso`, `guiaIngreso`, `merma`, `fecha`) VALUES ('1', '12000', 'g035-13256', '11998', 'g152-15236', '2', '2023-12-12');
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
