@@ -27,12 +27,12 @@ public class SerigrafiadoAction {
 			String sql = "INSERT INTO tb_serigrafiado VALUES (null, ?,?,?,?,?,?)";
 			pstm = cn.prepareStatement(sql);
 			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(2, s.getCantSalida());
+			pstm.setString(3, s.getGuiaSalida());
+			pstm.setInt(4, s.getCantIngreso());
+			pstm.setString(5, s.getGuiaIngreso());
+			pstm.setInt(6, s.getMerma());
+			pstm.setString(7, s.getFecha());
 			
 			ingresar = pstm.executeUpdate();
 			
@@ -79,7 +79,7 @@ public class SerigrafiadoAction {
 						rs.getInt(5),
 						rs.getString(6),
 						rs.getInt(7),
-						rs.getInt(8));
+						rs.getString(8));
 				
 				lista.add(obj);
 			
@@ -103,7 +103,8 @@ public class SerigrafiadoAction {
 		return lista;
 	}
 		
-	public serigrafiado obtener(int id){
+
+	/**public serigrafiado obtener(int id){
 		serigrafiado obj = null;
 		
 		Connection conn = null;
@@ -124,7 +125,7 @@ public class SerigrafiadoAction {
 			rs.getInt(5),
 			rs.getString(6),
 			rs.getInt(7),
-			rs.getInt(8));
+			rs.getString(8));
 			
 			}		
 		} catch (Exception e) {
@@ -143,8 +144,7 @@ public class SerigrafiadoAction {
 		}
 		return obj;
 	}
-	
-	/**public int eliminar(int id){
+	public int eliminar(int id){
 			int salida = -1;
 			
 			Connection conn = null;

@@ -4,10 +4,10 @@ public class serigrafiado {
 	
 	public int id_serigrafiado,insumo,cantSalida,cantIngreso,merma;
 	public String guiaSalida,guiaIngreso;
-	public int fecha;
+	public String fecha;
 
 	public serigrafiado(int id_serigrafiado, int insumo, int cantSalida, String guiaSalida, int cantIngreso, String guiaIngreso,
-			int merma, int fecha) {
+			int merma, String fecha) {
 		this.id_serigrafiado = id_serigrafiado;
 		this.insumo = insumo;
 		this.cantSalida = cantSalida;
@@ -74,12 +74,12 @@ public class serigrafiado {
 		this.guiaIngreso = guiaIngreso;
 	}
 
-	public int getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(int fecha) {
-		this.fecha = fecha;
+	public void setFecha(String string) {
+		this.fecha = string;
 	}
 
 	

@@ -4,14 +4,9 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -24,7 +19,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.DateFormatter;
 
 import controlador.InsumoAction;
 import controlador.SerigrafiadoAction;
@@ -51,9 +45,9 @@ public class Insumos_Serigrafico implements ActionListener {
 	private ArrayList<serigrafiado> lista; 
 	private ArrayList<insumo> listas; 
 	private int id_serigrafiado;
-
+	private int merma;
 	Insumos_Botella Ib = new Insumos_Botella();
-	private Date fecha;
+	DateTimeFormatter fecha = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
 	/**
 	 * Launch the application.
@@ -200,47 +194,42 @@ public class Insumos_Serigrafico implements ActionListener {
 
 	}
 	
-
 	protected void btnExportarActionPerformed(ActionEvent e) {
 
 	}
 
-
-	protected void cboBotellaActionPerformed(ActionEvent e) {
-
-	}
-
-	protected void cancelar() {
+	private void cancelar() {
 		
 	}
 	
-	protected int grabar() {
+	private int grabar() {
 		int grabo=0;
 		
 		int botella = cboBotella.getSelectedIndex();
 		int cantSalidas = Integer.parseInt(txtSalida.getText());
 		int cantIngresos = Integer.parseInt(txtIngreso.getText());
-		int merma = cantSalidas - cantIngresos;
-		int fecha = SimpleDateFormat.MEDIUM;
+		merma = cantIngresos-cantSalidas;
 		
-		serigrafiado s = new serigrafiado(id_serigrafiado,0,0, null,0,null,0,0);
+		
+		
+		serigrafiado s = new serigrafiado(id_serigrafiado,0,0, null,0,null,0,null);
 		
 		s.setInsumo(botella);
 		s.setCantSalida(cantSalidas);
 		s.setCantIngreso(cantIngresos);
 		s.setMerma(merma);
-		s.setFecha(fecha);
+		s.setFecha(fecha.format(LocalDateTime.now()));
 		
 		
 		JOptionPane.showMessageDialog(null, merma + " de merma");
-		JOptionPane.showMessageDialog(null, merma + " de merma");
+		JOptionPane.showMessageDialog(null, fecha.format(LocalDateTime.now()) + " de merma");
 		
 		grabo=obj.ingresarSerigrafiado(s);
 		return grabo;
 
 	}
 
-	protected void limpiarFormulario() {
+	private void limpiarFormulario() {
 
 		cboBotella.setSelectedIndex(0);
 		txtSalida.setText("");
@@ -272,7 +261,6 @@ public class Insumos_Serigrafico implements ActionListener {
 	}
 	
 	private void llenarDatosCombo() {
-		cboBotella.setSelectedItem(0);
 		listas = obj2.listarInsumo(null);
 		for (insumo p : listas) {
 			cboBotella.addItem(p.getDescripcion());
@@ -283,4 +271,5 @@ public class Insumos_Serigrafico implements ActionListener {
 	private void mostrarmensaje(String s) {
 		JOptionPane.showMessageDialog(null, s);
 	}
+	
 }
