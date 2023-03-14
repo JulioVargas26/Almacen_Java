@@ -1,141 +1,99 @@
 package controlador;
-/*
-import java.awt.Image;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.imageio.ImageIO;
+import entidad.insumo;
+import util.ConexionMySql;
 
-import java.sql.Blob;
-
-import com.mysql.jdbc.Statement;
-
-
-
-import entidad.Administrado;
-import entidad.Requisitos;
-import util.MySqlDBConexion;
-*/
 public class InsumoAction {
-
-	/**
 	
-	    
-	   
 	// Definir los métodos que interactuarán con la BD:
 		// insertar, eliminar, listar, actualizar, buscarXId
 		
-		public int insertar(Requisitos obj){
-			int salida = 0;
-			
-			// 1. Declarar variables
-			Connection conn = null;
-			PreparedStatement pstm = null;
-			
-			// 2. Control de excepciones
-			try {
-				// 3. Definir la sentencia SQL
-				String sql = "INSERT INTO tb_requisitos VALUES (null, ?,?,?,?,?,?,?)";
-				
-				// 4. Obtener la conexion
-				conn = MySqlDBConexion.getConexion();
-				
-				// 5. Obtener un PreparedStatement de la conexión
-				pstm = conn.prepareStatement(sql);
-				
-				// 6. Agregar parametros
-				 pstm.setString(1, obj.getEmpresa());
-				 pstm.setString(2, obj.getRuc());
-				 pstm.setString(3, obj.getRazonsocial());
-				 pstm.setBinaryStream(4, obj.getSolicitud());
-				 pstm.setBinaryStream(5, obj.getCopiadni());
-				 pstm.setBinaryStream(6, obj.getRecibopago());
-				 pstm.setString(7, obj.getIdadministrado());
-								
-				// 7. Ejecutar
-				salida = pstm.executeUpdate();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally{
-				// Cerrar la conexion y otros objetos
-				try {
-					if(pstm != null)
-						pstm.close();
-					if(conn != null)
-						conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return salida;		
-		}
-
-		public List<Requisitos> listar(){
-			List<Requisitos> lista = new ArrayList<Requisitos>();
-			
-			Connection conn = null;
-			PreparedStatement pstm = null;
-			ResultSet rs = null;
-			
-			try {
-				// 1. Definir la sentencia SQL
-				String sql = "SELECT * FROM tb_requisitos";
-				
-				// 2. Obtener la conexion
-				conn = MySqlDBConexion.getConexion();
-				
-				// 3. Obtener el PreparedStatement
-				pstm = conn.prepareStatement(sql);
-				
-				// 4. Ejecutamos y obtenemos el ResultSet
-				rs = pstm.executeQuery();
-				
-				// 5. Poblar la coleccion
-				Requisitos obj = null;
-				// Recorre el rs
-				while (rs.next()) {
-					obj = new Requisitos();
-					obj.setIdrequisitos(rs.getInt("idrequisitos"));
-					obj.setEmpresa(rs.getString("empresa"));
-					obj.setRuc(rs.getString("ruc"));
-					obj.setRazonsocial(rs.getString("razonsocial"));
-					obj.setIdadministrado(rs.getString("idadministrado"));
-					
-					
-					
-				
-				
-					
-				
-					
-					// Agregar a la lista
-					lista.add(obj);
-				}			
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally{
-				try {
-					if(rs != null)
-						rs.close();
-					if(pstm != null)
-						pstm.close();
-					if(conn != null)
-						conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return lista;
-		}
+	public int ingresarInsumo(insumo i){
+		int ingresar = -1;
+		Connection cn = null;
+		PreparedStatement pstm = null;
 		
+		try {
+			cn = new ConexionMySql().getConexion();
+			
+			cn.setAutoCommit(false);
+			
+			String sql = "insert into tb_insumo values(null,?)";
+			pstm = cn.prepareStatement(sql);
+			pstm.setString(1, i.getDescripcion());
+			
+			ingresar = pstm.executeUpdate();
+			
+			cn.commit();
+			
+			
+		} catch (SQLException e) {
+			try {
+				cn.rollback();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} finally {
+			try {
+				if (pstm != null)
+					pstm.close();
+				if (cn != null)
+					cn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return ingresar;
+	}
+	
+	public ArrayList<insumo> listarInsumo(insumo insumo){
+		ArrayList<insumo> lista = new ArrayList<insumo>();
+		Connection cn = null;
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		
+		try{
+			
+			cn = new ConexionMySql().getConexion();
+			String sql = "SELECT * FROM tb_insumo;";
+			pstm = cn.prepareStatement(sql);
+			rs = pstm.executeQuery();
+			
+			while(rs.next()){
+				insumo obj = new insumo(rs.getInt(1), 
+									rs.getString(2));
+				
+				lista.add(obj);
+			
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try{
+				if(rs != null)
+					rs.close();
+				if(pstm != null)
+					pstm.close();
+				if(cn != null)
+					cn.close();
+			}catch(Exception e2){
+				e2.printStackTrace();
+			}
+		}		
+		
+		return lista;
+	}
+	
+				
+		/**
 		public int eliminar(int id){
 			int salida = -1;
 			
