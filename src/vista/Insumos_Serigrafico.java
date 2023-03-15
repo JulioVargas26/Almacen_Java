@@ -36,14 +36,13 @@ public class Insumos_Serigrafico implements ActionListener {
 	private JTextField txtIngreso;
 	private JTextField txtSalida;
 	private JTable tbRegistro;
-	private JComboBox cboBotella;
+	private JComboBox<String> cboBotella;
 	private JButton btnAdicionar;
-	
-	DefaultTableModel model=new DefaultTableModel();
-	SerigrafiadoAction obj= new SerigrafiadoAction();
-	InsumoAction obj2= new InsumoAction();
-	private ArrayList<serigrafiado> lista; 
-	private ArrayList<insumo> listas; 
+
+	DefaultTableModel model = new DefaultTableModel();
+	SerigrafiadoAction obj = new SerigrafiadoAction();
+	InsumoAction obj2 = new InsumoAction();
+	private ArrayList<serigrafiado> lista;
 	private int id_serigrafiado;
 	private int merma;
 	Insumos_Botella Ib = new Insumos_Botella();
@@ -86,9 +85,9 @@ public class Insumos_Serigrafico implements ActionListener {
 		lblNewLabel.setBounds(27, 88, 101, 21);
 		frame.getContentPane().add(lblNewLabel);
 
-		cboBotella = new JComboBox();
+		cboBotella = new JComboBox<String>();
 		cboBotella.addActionListener(this);
-		cboBotella.setModel(new DefaultComboBoxModel(new String[] {"Seleccione ..."}));
+		cboBotella.setModel(new DefaultComboBoxModel<String>(new String[] { "Seleccione ..." }));
 		cboBotella.setBounds(134, 87, 333, 22);
 		frame.getContentPane().add(cboBotella);
 
@@ -160,20 +159,25 @@ public class Insumos_Serigrafico implements ActionListener {
 		btnAdicionar.addActionListener(this);
 		btnAdicionar.setBounds(477, 87, 120, 22);
 		frame.getContentPane().add(btnAdicionar);
-		
+
 		this.llenarCabecera();
 		this.llenarDatosTabla();
 		this.llenarDatosCombo();
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAdicionar) {
 			Ib.show();
 		}
 
 		if (e.getSource() == cboBotella) {
-			llenarDatosCombo();
+				
+			this.llenarDatosCombo();
+			if( cboBotella.getSelectedIndex()!=0) {
+				FiltarDatosXCombo(cboBotella.getSelectedItem().toString());
+			}
 		}
 		if (e.getSource() == btnExportar) {
 			btnExportarActionPerformed(e);
@@ -193,38 +197,39 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 
 	}
-	
+
 	protected void btnExportarActionPerformed(ActionEvent e) {
 
 	}
 
 	private void cancelar() {
-		
+
 	}
-	
+
 	private int grabar() {
-		int grabo=0;
-		
+		int grabo = 0;
+
 		int botella = cboBotella.getSelectedIndex();
 		int cantSalidas = Integer.parseInt(txtSalida.getText());
 		int cantIngresos = Integer.parseInt(txtIngreso.getText());
-		merma = cantIngresos-cantSalidas;
-		
-		
-		
-		serigrafiado s = new serigrafiado(id_serigrafiado,0,0, null,0,null,0,null);
-		
+		String guiaS = txtGuiaSalida.getText();
+		String guiaI = txtGuiaIngreso.getText();
+		merma = cantIngresos - cantSalidas;
+
+		serigrafiado s = new serigrafiado(id_serigrafiado, 0, 0, null, 0, null, 0, null);
+
 		s.setInsumo(botella);
 		s.setCantSalida(cantSalidas);
 		s.setCantIngreso(cantIngresos);
+		s.setGuiaSalida(guiaS);
+		s.setGuiaIngreso(guiaI);
 		s.setMerma(merma);
 		s.setFecha(fecha.format(LocalDateTime.now()));
-		
-		
+
 		JOptionPane.showMessageDialog(null, merma + " de merma");
-		JOptionPane.showMessageDialog(null, fecha.format(LocalDateTime.now()) + " de merma");
-		
-		grabo=obj.ingresarSerigrafiado(s);
+		JOptionPane.showMessageDialog(null,"Fecha Actual : " + fecha.format(LocalDateTime.now()));
+
+		grabo = obj.ingresarSerigrafiado(s);
 		return grabo;
 
 	}
@@ -253,23 +258,38 @@ public class Insumos_Serigrafico implements ActionListener {
 		model.setRowCount(0);
 		lista = obj.ListarSerigrafiado(null);
 		for (serigrafiado p : lista) {
-			Object Fila[] = { p.getFecha(), p.getCantSalida(),p.getGuiaSalida(),p.getCantIngreso(),p.getGuiaIngreso(),p.getMerma()
+			Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
+					p.getGuiaIngreso(), p.getMerma()
 
 			};
 			model.addRow(Fila);
 		}
 	}
-	
+
 	private void llenarDatosCombo() {
-		listas = obj2.listarInsumo(null);
-		for (insumo p : listas) {
-			cboBotella.addItem(p.getDescripcion());
+
+		ArrayList<insumo> al = obj2.listarInsumo(null);
+		for (int i = 0; i < al.size(); i++) {	
+			cboBotella.addItem(al.get(i).getCod_insumo()+" "+al.get(i).getDescripcion());
 		}
-			
+	
 	}
 
+	private void FiltarDatosXCombo(String combo) {
+		 
+		 model.setRowCount(0);
+			lista = obj.obtener(combo);
+			for (serigrafiado p : lista) {
+				Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
+						p.getGuiaIngreso(), p.getMerma()
+
+				};
+				model.addRow(Fila);
+			}
+	}
+	
 	private void mostrarmensaje(String s) {
 		JOptionPane.showMessageDialog(null, s);
 	}
-	
+
 }

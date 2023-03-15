@@ -9,7 +9,7 @@ public class ConexionMySql {
 		Connection cn = null;
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/basa","root", "mysql");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

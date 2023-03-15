@@ -62,7 +62,7 @@ public class InsumoAction {
 		try{
 			
 			cn = new ConexionMySql().getConexion();
-			String sql = "SELECT * FROM tb_insumo;";
+			String sql = "SELECT * FROM tb_insumo";
 			pstm = cn.prepareStatement(sql);
 			rs = pstm.executeQuery();
 			
@@ -92,7 +92,44 @@ public class InsumoAction {
 		return lista;
 	}
 	
+	/**public ArrayList<insumo> ComboBox(int id) {
+		 insumo combo =null;
+	    
+		Connection conn = null;
+			PreparedStatement pstm = null;
+			ResultSet rs = null;
+			
+			try {
+				String sql = "SELECT * FROM tb_serigrafiado WHERE insumo = ?";
+				conn = new ConexionMySql().getConexion();
+				pstm = conn.prepareStatement(sql);
+				pstm.setInt(1, id);
+				rs = pstm.executeQuery();
+				while (rs.next()) {
+					combo = new insumo(rs.getInt(1), 
+							rs.getString(2));
+				}		
 				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally{
+				try {
+					if(rs != null)
+						rs.close();
+					if(pstm != null)
+						pstm.close();
+					if(conn != null)
+						conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+	    
+	   
+	      return combo;
+		
+	}			
 		/**
 		public int eliminar(int id){
 			int salida = -1;
