@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -174,8 +175,6 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 
 		if (e.getSource() == cboBotella) {
-
-			this.llenarDatosCombo();
 			FiltarDatosXCombo(cboBotella.getSelectedIndex());
 		}
 		if (e.getSource() == btnExportar) {
@@ -266,10 +265,10 @@ public class Insumos_Serigrafico implements ActionListener {
 	}
 
 	private void llenarDatosCombo() {
+		List<insumo> listar = obj.ComboInsumo();	
 		
-		ArrayList<insumo> listar = obj.ComboInsumo();
-		for (int i = 0; i < listar.size(); i++) {
-			cboBotella.addItem(listar.get(i).getDescripcion());
+		for(insumo ins : listar) {
+			cboBotella.addItem(ins.getDescripcion());
 		}
 
 	}

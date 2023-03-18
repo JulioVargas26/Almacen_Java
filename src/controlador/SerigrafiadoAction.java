@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import entidad.insumo;
 import entidad.serigrafiado;
@@ -101,8 +102,8 @@ public class SerigrafiadoAction {
 		return lista;
 	}
 
-	public ArrayList<insumo> ComboInsumo() {
-		ArrayList<insumo> list = null;
+	public List<insumo> ComboInsumo() {
+		List<insumo> list = null;
 
 		Connection con = null;
 		PreparedStatement pstm = null;
