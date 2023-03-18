@@ -4,9 +4,8 @@ public class insumo {
 
 	private int cod_insumo;
 	private String Descripcion;
-	
-	
 	public insumo(int cod_insumo, String descripcion) {
+		super();
 		this.cod_insumo = cod_insumo;
 		Descripcion = descripcion;
 	}
@@ -22,7 +21,6 @@ public class insumo {
 	public void setDescripcion(String descripcion) {
 		Descripcion = descripcion;
 	}
-	
 	
 	
 }

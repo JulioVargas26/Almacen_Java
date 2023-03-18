@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -161,9 +162,9 @@ public class Insumos_Serigrafico implements ActionListener {
 		frame.getContentPane().add(btnAdicionar);
 
 		this.llenarCabecera();
-		this.llenarDatosTabla();
 		this.llenarDatosCombo();
 
+		this.llenarDatosTabla();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -173,11 +174,9 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 
 		if (e.getSource() == cboBotella) {
-				
+
 			this.llenarDatosCombo();
-			if( cboBotella.getSelectedIndex()!=0) {
-				FiltarDatosXCombo(cboBotella.getSelectedItem().toString());
-			}
+			FiltarDatosXCombo(cboBotella.getSelectedIndex());
 		}
 		if (e.getSource() == btnExportar) {
 			btnExportarActionPerformed(e);
@@ -227,9 +226,9 @@ public class Insumos_Serigrafico implements ActionListener {
 		s.setFecha(fecha.format(LocalDateTime.now()));
 
 		JOptionPane.showMessageDialog(null, merma + " de merma");
-		JOptionPane.showMessageDialog(null,"Fecha Actual : " + fecha.format(LocalDateTime.now()));
+		JOptionPane.showMessageDialog(null, "Fecha Actual : " + fecha.format(LocalDateTime.now()));
 
-		grabo = obj.ingresarSerigrafiado(s);
+		grabo = obj.IngresarSerigrafiado(s);
 		return grabo;
 
 	}
@@ -267,27 +266,27 @@ public class Insumos_Serigrafico implements ActionListener {
 	}
 
 	private void llenarDatosCombo() {
-
-		ArrayList<insumo> al = obj2.listarInsumo(null);
-		for (int i = 0; i < al.size(); i++) {	
-			cboBotella.addItem(al.get(i).getCod_insumo()+" "+al.get(i).getDescripcion());
+		
+		ArrayList<insumo> listar = obj.ComboInsumo();
+		for (int i = 0; i < listar.size(); i++) {
+			cboBotella.addItem(listar.get(i).getDescripcion());
 		}
-	
+
 	}
 
-	private void FiltarDatosXCombo(String combo) {
-		 
-		 model.setRowCount(0);
-			lista = obj.obtener(combo);
-			for (serigrafiado p : lista) {
-				Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
-						p.getGuiaIngreso(), p.getMerma()
+	private void FiltarDatosXCombo(int combo) {
 
-				};
-				model.addRow(Fila);
-			}
+		model.setRowCount(0);
+		lista = obj.filtroxInsumo(combo);
+		for (serigrafiado p : lista) {
+			Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
+					p.getGuiaIngreso(), p.getMerma()
+
+			};
+			model.addRow(Fila);
+		}
 	}
-	
+
 	private void mostrarmensaje(String s) {
 		JOptionPane.showMessageDialog(null, s);
 	}

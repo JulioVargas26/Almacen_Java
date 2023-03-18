@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS `basa`.`tb_serigrafiado` ;
 
 CREATE TABLE IF NOT EXISTS `basa`.`tb_serigrafiado` (
   `id_serigrafiado` INT NOT NULL AUTO_INCREMENT,
-  `insumo` INT NOT NULL,
+  `id_insumo` INT NOT NULL,
   `cantSalida` INT NOT NULL,
   `guiaSalida` VARCHAR(45) NOT NULL,
   `cantIngreso` INT NOT NULL,
@@ -46,14 +46,14 @@ CREATE TABLE IF NOT EXISTS `basa`.`tb_serigrafiado` (
   `merma` INT NOT NULL,
   `fecha` DATE NOT NULL,
   PRIMARY KEY (`id_serigrafiado`),
-  INDEX `fk_serigrafiado_insumo_idx` (`insumo` ASC) VISIBLE,
-  CONSTRAINT `fk_serigrafiado_insumo`
-    FOREIGN KEY (`insumo`)
-    REFERENCES `basa`.`tb_insumo` (`id_insumo`))
+  INDEX `fk_tb_serigrafiado_tb_insumo_idx` (`id_insumo` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_serigrafiado_tb_insumo`
+    FOREIGN KEY (`id_insumo`)
+    REFERENCES `basa`.`tb_insumo` (`id_insumo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
-
-INSERT INTO `basa`.`tb_serigrafiado` (`insumo`, `cantSalida`, `guiaSalida`, `cantIngreso`, `guiaIngreso`, `merma`, `fecha`) VALUES ('1', '12000', 'g035-13256', '11998', 'g152-15236', '2', '2023-12-12');
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

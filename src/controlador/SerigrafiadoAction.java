@@ -6,15 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import entidad.insumo;
 import entidad.serigrafiado;
 import util.ConexionMySql;
 
 public class SerigrafiadoAction {
 
-	// Definir los métodos que interactuarán con la BD:
+	// Definir los mï¿½todos que interactuarï¿½n con la BD:
 	// insertar, eliminar, listar, actualizar, buscarXId
 
-	public int ingresarSerigrafiado(serigrafiado s) {
+	public int IngresarSerigrafiado(serigrafiado s) {
 		int salida = 0;
 
 		// 1. Declarar variables
@@ -29,7 +30,7 @@ public class SerigrafiadoAction {
 			// 4. Obtener la conexion
 			conn = new ConexionMySql().getConexion();
 
-			// 5. Obtener un PreparedStatement de la conexión
+			// 5. Obtener un PreparedStatement de la conexiï¿½n
 			pstm = conn.prepareStatement(sql);
 
 			// 6. Agregar parametros
@@ -60,7 +61,7 @@ public class SerigrafiadoAction {
 		return salida;
 
 	}
-
+	
 	public ArrayList<serigrafiado> ListarSerigrafiado(serigrafiado serigrafiado) {
 		ArrayList<serigrafiado> lista = new ArrayList<serigrafiado>();
 		Connection cn = null;
@@ -100,21 +101,28 @@ public class SerigrafiadoAction {
 		return lista;
 	}
 
-	public ArrayList<serigrafiado> obtener(String id) {
-		ArrayList<serigrafiado> lista = new ArrayList<serigrafiado>();
-		Connection cn = null;
+	public ArrayList<insumo> ComboInsumo() {
+		ArrayList<insumo> list = null;
+
+		Connection con = null;
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 
 		try {
+			con = new ConexionMySql().getConexion();
 
-			String sql = "SELECT * FROM tb_serigrafiado s join tb_insumo i on s.insumo = i.id_insumo WHERE descripcion = ?";
-			cn = new ConexionMySql().getConexion();
-			pstm = cn.prepareStatement(sql);
-			pstm.setString(1, id);
+			// Definir la sentencia SQL
+			String sql = "SELECT * FROM tb_insumo";
+
+			pstm = con.prepareStatement(sql);
 			rs = pstm.executeQuery();
 			
+			list = new ArrayList<insumo>();
 			while (rs.next()) {
+				insumo pst = new insumo(rs.getInt(1), rs.getString(2));
+
+				// TODO: Agregar la lectura del resultado de la consulta BD
+				list.add(pst);
 
 			}
 
@@ -126,78 +134,58 @@ public class SerigrafiadoAction {
 					rs.close();
 				if (pstm != null)
 					pstm.close();
-				if (cn != null)
-					cn.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		return lista;
+
+		return list;
 	}
+	
+	public ArrayList<serigrafiado> filtroxInsumo(int id) {
+		ArrayList<serigrafiado> list = null;
 
-	public int eliminar(int id) {
-		int salida = -1;
-
-		Connection conn = null;
+		Connection con = null;
 		PreparedStatement pstm = null;
+		ResultSet rs = null;
 
 		try {
-			String sql = "DELETE FROM tb_administrado WHERE idadministrado = ?";
+			con = new ConexionMySql().getConexion();
 
-			conn = new ConexionMySql().getConexion();
-			pstm = conn.prepareStatement(sql);
+			// Definir la sentencia SQL
+			String sql = "SELECT * FROM tb_serigrafiado where id_insumo = ?";
+			pstm = con.prepareStatement(sql);
 			pstm.setInt(1, id);
+			rs = pstm.executeQuery();
 
-			salida = pstm.executeUpdate();
+			list = new ArrayList<serigrafiado>();
+			while (rs.next()) {
+				serigrafiado pst = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4),
+						rs.getInt(5), rs.getString(6),rs.getInt(7), rs.getString(8));
+
+				// TODO: Agregar la lectura del resultado de la consulta BD
+				list.add(pst);
+
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
+				if (rs != null)
+					rs.close();
 				if (pstm != null)
 					pstm.close();
-				if (conn != null)
-					conn.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		return salida;
+
+		return list;
 	}
-
-	/**
-	 * public int actualizar(Administrado obj){ int salida = 0;
-	 * 
-	 * // 1. Declarar variables Connection conn = null; PreparedStatement pstm =
-	 * null;
-	 * 
-	 * // 2. Control de excepciones try { // 3. Definir la sentencia SQL String sql
-	 * = "UPDATE tb_administrado SET " + " nombres = ?, apellidos = ?, dni = ?, " +
-	 * " direccion = ?, telefono = ?, " + " email = ?, distrito = ?, " + " fecha= ?"
-	 * + " WHERE idadministrado = ?";
-	 * 
-	 * // 4. Obtener la conexion conn = MySqlDBConexion.getConexion();
-	 * 
-	 * // 5. Obtener un PreparedStatement de la conexión pstm =
-	 * conn.prepareStatement(sql);
-	 * 
-	 * // 6. Agregar parametros pstm.setString(1, obj.getNombres());
-	 * pstm.setString(2, obj.getApellidos()); pstm.setString(3, obj.getDni());
-	 * pstm.setString(4, obj.getDireccion()); pstm.setString(5, obj.getTelefono());
-	 * pstm.setString(6, obj.getEmail()); pstm.setString(7, obj.getDistrito());
-	 * pstm.setString(8, obj.getFechaIngres()); pstm.setInt(9,
-	 * obj.getIdadministrado());
-	 * 
-	 * 
-	 * 
-	 * // 7. Ejecutar salida = pstm.executeUpdate();
-	 * 
-	 * } catch (Exception e) { e.printStackTrace(); } finally{ // Cerrar la conexion
-	 * y otros objetos try { if(pstm != null) pstm.close(); if(conn != null)
-	 * conn.close(); } catch (SQLException e) { e.printStackTrace(); } } return
-	 * salida; }
-	 * 
-	 * 
-	 */
-
+	
 }
