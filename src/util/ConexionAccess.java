@@ -9,7 +9,7 @@ public class ConexionAccess {
 		Connection cn = null;
 		
 		try {
-			Class.forName("net.ucanaccess.jdb.UcanaccessDriver");
+			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			cn = DriverManager.getConnection("jdbc:ucanaccess://D:\\Documentos\\Eclipse Java\\Basa\\Almacen_sql\\db\\\\basa_be.accdb");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

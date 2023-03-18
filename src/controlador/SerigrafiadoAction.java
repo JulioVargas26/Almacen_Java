@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import entidad.insumo;
 import entidad.serigrafiado;
-import util.ConexionMySql;
+import util.ConexionAccess;
 
 public class SerigrafiadoAction {
 
@@ -28,7 +28,7 @@ public class SerigrafiadoAction {
 			String sql = "INSERT INTO tb_serigrafiado VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
 
 			// 4. Obtener la conexion
-			conn = new ConexionMySql().getConexion();
+			conn = new ConexionAccess().getConexion();
 
 			// 5. Obtener un PreparedStatement de la conexi�n
 			pstm = conn.prepareStatement(sql);
@@ -70,7 +70,7 @@ public class SerigrafiadoAction {
 
 		try {
 
-			cn = new ConexionMySql().getConexion();
+			cn = new ConexionAccess().getConexion();
 			String sql = "SELECT * FROM tb_serigrafiado";
 			pstm = cn.prepareStatement(sql);
 			rs = pstm.executeQuery();
@@ -109,7 +109,7 @@ public class SerigrafiadoAction {
 		ResultSet rs = null;
 
 		try {
-			con = new ConexionMySql().getConexion();
+			con = new ConexionAccess().getConexion();
 
 			// Definir la sentencia SQL
 			String sql = "SELECT * FROM tb_insumo";
@@ -152,7 +152,7 @@ public class SerigrafiadoAction {
 		ResultSet rs = null;
 
 		try {
-			con = new ConexionMySql().getConexion();
+			con = new ConexionAccess().getConexion();
 
 			// Definir la sentencia SQL
 			String sql = "SELECT * FROM tb_serigrafiado where id_insumo = ?";

@@ -162,9 +162,9 @@ public class Insumos_Serigrafico implements ActionListener {
 		frame.getContentPane().add(btnAdicionar);
 
 		this.llenarCabecera();
-		this.llenarDatosCombo();
-
 		this.llenarDatosTabla();
+		this.llenarDatosCombo();
+		
 	}
 
 	@SuppressWarnings("deprecation")

@@ -6,10 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import entidad.insumo;
-import util.ConexionMySql;
+import util.ConexionAccess;
 
 public class InsumoAction {
 	
@@ -22,7 +21,7 @@ public class InsumoAction {
 		PreparedStatement pstm = null;
 		
 		try {
-			cn = new ConexionMySql().getConexion();
+			cn = new ConexionAccess().getConexion();
 			
 			cn.setAutoCommit(false);
 			
@@ -62,7 +61,7 @@ public class InsumoAction {
 		
 		try{
 			
-			cn = new ConexionMySql().getConexion();
+			cn = new ConexionAccess().getConexion();
 			String sql = "SELECT * FROM tb_insumo";
 			pstm = cn.prepareStatement(sql);
 			rs = pstm.executeQuery();
