@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import entidad.insumo;
 import entidad.serigrafiado;
@@ -14,7 +13,7 @@ import util.ConexionAccess;
 public class SerigrafiadoAction {
 
 	// Definir los m�todos que interactuar�n con la BD:
-	// insertar, eliminar, listar, actualizar, buscarXId
+	// insertar, eliminar, listar, actualizar, filtraXId, exportarData
 
 	public int IngresarSerigrafiado(serigrafiado s) {
 		int salida = 0;
@@ -102,8 +101,8 @@ public class SerigrafiadoAction {
 		return lista;
 	}
 
-	public List<insumo> ComboInsumo() {
-		List<insumo> list = null;
+	public ArrayList<insumo> ComboInsumo() {
+		ArrayList<insumo> list = null;
 
 		Connection con = null;
 		PreparedStatement pstm = null;
@@ -188,5 +187,7 @@ public class SerigrafiadoAction {
 
 		return list;
 	}
+	
+	
 	
 }

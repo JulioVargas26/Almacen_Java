@@ -1,18 +1,22 @@
 package vista;
 
+import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,7 +24,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import controlador.InsumoAction;
 import controlador.SerigrafiadoAction;
@@ -143,7 +154,7 @@ public class Insumos_Serigrafico implements ActionListener {
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(this);
-		btnCancelar.setBounds(259, 228, 120, 23);
+		btnCancelar.setBounds(252, 228, 120, 23);
 		frame.getContentPane().add(btnCancelar);
 
 		btnExportar = new JButton("Exportar");
@@ -165,7 +176,6 @@ public class Insumos_Serigrafico implements ActionListener {
 		this.llenarCabecera();
 		this.llenarDatosTabla();
 		this.llenarDatosCombo();
-		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -175,13 +185,19 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 
 		if (e.getSource() == cboBotella) {
-			FiltarDatosXCombo(cboBotella.getSelectedIndex());
+			filtarDatosXCombo(cboBotella.getSelectedIndex());
 		}
 		if (e.getSource() == btnExportar) {
-			btnExportarActionPerformed(e);
+			try {
+				exportarSerigrafiado();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		if (e.getSource() == btnCancelar) {
 			cancelar();
+			
 		}
 		if (e.getSource() == btnRegistrar) {
 
@@ -196,12 +212,9 @@ public class Insumos_Serigrafico implements ActionListener {
 
 	}
 
-	protected void btnExportarActionPerformed(ActionEvent e) {
-
-	}
-
 	private void cancelar() {
-
+		this.limpiarFormulario();
+		this.llenarDatosTabla();
 	}
 
 	private int grabar() {
@@ -264,16 +277,17 @@ public class Insumos_Serigrafico implements ActionListener {
 		}
 	}
 
-	private void llenarDatosCombo() {
-		List<insumo> listar = obj.ComboInsumo();	
-		
-		for(insumo ins : listar) {
+	public void llenarDatosCombo() {
+		ArrayList<insumo> listar = obj.ComboInsumo();
+
+		//cboBotella.removeAllItems();
+		for (insumo ins : listar) {
 			cboBotella.addItem(ins.getDescripcion());
 		}
 
 	}
 
-	private void FiltarDatosXCombo(int combo) {
+	private void filtarDatosXCombo(int combo) {
 
 		model.setRowCount(0);
 		lista = obj.filtroxInsumo(combo);
@@ -288,6 +302,68 @@ public class Insumos_Serigrafico implements ActionListener {
 
 	private void mostrarmensaje(String s) {
 		JOptionPane.showMessageDialog(null, s);
+	}
+
+	private void exportarSerigrafiado() throws IOException {
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de excel", "xls");
+		chooser.setFileFilter(filter);
+		chooser.setDialogTitle("Guardar archivo");
+		chooser.setAcceptAllFileFilterUsed(false);
+		
+		if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			String ruta = chooser.getSelectedFile().toString().concat(".xls");
+			try {
+				
+				File archivoXLS = new File(ruta);
+				if (archivoXLS.exists()) {
+					archivoXLS.delete();
+				}
+				
+				archivoXLS.createNewFile();
+				Workbook libro = new HSSFWorkbook();
+				FileOutputStream archivo = new FileOutputStream(archivoXLS);
+				Sheet hoja = libro.createSheet("Mi hoja de trabajo 1");
+				hoja.setDisplayGridlines(false);
+				
+				for (int f = 0; f < tbRegistro.getRowCount(); f++) {
+					Row fila = hoja.createRow(f);
+					for (int c = 0; c < tbRegistro.getColumnCount(); c++) {
+						Cell celda = fila.createCell(c);
+						if (f == 0) {
+							celda.setCellValue(tbRegistro.getColumnName(c));
+						}
+					}
+				}
+				
+				int filaInicio = 1;
+				for (int f = 0; f < tbRegistro.getRowCount(); f++) {
+					Row fila = hoja.createRow(filaInicio);
+					filaInicio++;
+					
+					for (int c = 0; c < tbRegistro.getColumnCount(); c++) {
+						Cell celda = fila.createCell(c);
+						
+						if (tbRegistro.getValueAt(f, c) instanceof Double) {
+							celda.setCellValue(Double.parseDouble(tbRegistro.getValueAt(f, c).toString()));
+						} else if (tbRegistro.getValueAt(f, c) instanceof Float) {
+							celda.setCellValue(Float.parseFloat((String) tbRegistro.getValueAt(f, c)));
+						} else {
+							celda.setCellValue(String.valueOf(tbRegistro.getValueAt(f, c)));
+						}
+					}
+				}
+				
+				libro.write(archivo);
+				archivo.close();
+				Desktop.getDesktop().open(archivoXLS);
+				
+			} catch (IOException | 	NumberFormatException	e) {
+				// TODO: handle 
+				throw e;
+			} 
+		}
+
 	}
 
 }
