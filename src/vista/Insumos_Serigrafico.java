@@ -11,19 +11,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -38,18 +38,27 @@ import controlador.SerigrafiadoAction;
 import entidad.insumo;
 import entidad.serigrafiado;
 
-public class Insumos_Serigrafico implements ActionListener {
+public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
-	private JFrame frame;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JLabel lblNewLabel_1;
+	private JComboBox<Object> cboBotella;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_5;
+	private JTextField txtSalida;
+	private JTextField txtIngreso;
+	private JTextField txtGuiaSalida;
+	private JTextField txtGuiaIngreso;
+	private JLabel lblNewLabel;
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
 	private JButton btnExportar;
-	private JTextField txtGuiaIngreso;
-	private JTextField txtGuiaSalida;
-	private JTextField txtIngreso;
-	private JTextField txtSalida;
-	private JTable tbRegistro;
-	private JComboBox<String> cboBotella;
 	private JButton btnAdicionar;
 
 	DefaultTableModel model = new DefaultTableModel();
@@ -60,6 +69,8 @@ public class Insumos_Serigrafico implements ActionListener {
 	private int merma;
 	Insumos_Botella Ib = new Insumos_Botella();
 	DateTimeFormatter fecha = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+	private JScrollPane scrollPane;
+	private JTable tbRegistro;
 
 	/**
 	 * Launch the application.
@@ -68,8 +79,8 @@ public class Insumos_Serigrafico implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Insumos_Serigrafico window = new Insumos_Serigrafico();
-					window.frame.setVisible(true);
+					Insumos_Serigrafico frame = new Insumos_Serigrafico();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -78,114 +89,138 @@ public class Insumos_Serigrafico implements ActionListener {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the frame.
 	 */
 	public Insumos_Serigrafico() {
-		initialize();
-	}
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 641, 506);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 641, 506);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-
-		JLabel lblNewLabel = new JLabel("Tipo de Botella : ");
-		lblNewLabel.setBounds(27, 88, 101, 21);
-		frame.getContentPane().add(lblNewLabel);
-
-		cboBotella = new JComboBox<String>();
-		cboBotella.addActionListener(this);
-		cboBotella.setModel(new DefaultComboBoxModel<String>(new String[] { "Seleccione ..." }));
-		cboBotella.setBounds(134, 87, 333, 22);
-		frame.getContentPane().add(cboBotella);
-
-		JLabel lblNewLabel_1 = new JLabel("Cantidad de Salidad");
-		lblNewLabel_1.setBounds(27, 136, 120, 21);
-		frame.getContentPane().add(lblNewLabel_1);
-
-		txtSalida = new JTextField();
-		txtSalida.setBounds(157, 135, 150, 22);
-		frame.getContentPane().add(txtSalida);
-		txtSalida.setColumns(10);
-
-		JLabel lblNewLabel_2 = new JLabel("Cantidad de  Ingreso ");
-		lblNewLabel_2.setBounds(27, 180, 120, 21);
-		frame.getContentPane().add(lblNewLabel_2);
-
-		txtIngreso = new JTextField();
-		txtIngreso.setBounds(157, 180, 150, 21);
-		frame.getContentPane().add(txtIngreso);
-		txtIngreso.setColumns(10);
-
-		JLabel lblNewLabel_3 = new JLabel("N\u00BA de guia");
-		lblNewLabel_3.setBounds(317, 139, 120, 18);
-		frame.getContentPane().add(lblNewLabel_3);
-
-		JLabel lblNewLabel_3_1 = new JLabel("N\u00BA de guia");
-		lblNewLabel_3_1.setBounds(317, 183, 120, 18);
-		frame.getContentPane().add(lblNewLabel_3_1);
-
-		txtGuiaSalida = new JTextField();
-		txtGuiaSalida.setBounds(447, 136, 150, 20);
-		frame.getContentPane().add(txtGuiaSalida);
-		txtGuiaSalida.setColumns(10);
-
-		txtGuiaIngreso = new JTextField();
-		txtGuiaIngreso.setBounds(447, 180, 150, 20);
-		frame.getContentPane().add(txtGuiaIngreso);
-		txtGuiaIngreso.setColumns(10);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(27, 279, 571, 177);
-		frame.getContentPane().add(scrollPane);
-
-		tbRegistro = new JTable();
-		scrollPane.setViewportView(tbRegistro);
-
-		btnRegistrar = new JButton("Registrar");
-		btnRegistrar.addActionListener(this);
-		btnRegistrar.setBounds(78, 228, 120, 23);
-		frame.getContentPane().add(btnRegistrar);
-
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(this);
-		btnCancelar.setBounds(252, 228, 120, 23);
-		frame.getContentPane().add(btnCancelar);
-
-		btnExportar = new JButton("Exportar");
-		btnExportar.addActionListener(this);
-		btnExportar.setBounds(427, 228, 120, 23);
-		frame.getContentPane().add(btnExportar);
-
-		JLabel lblNewLabel_4 = new JLabel("Control de Insumos Serigrafiados");
-		lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setBounds(10, 11, 605, 37);
-		frame.getContentPane().add(lblNewLabel_4);
-
-		btnAdicionar = new JButton("Adicionar");
-		btnAdicionar.addActionListener(this);
-		btnAdicionar.setBounds(477, 87, 120, 22);
-		frame.getContentPane().add(btnAdicionar);
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		{
+			lblNewLabel = new JLabel("Control de Insumos Serigrafiados");
+			lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
+			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel.setBounds(10, 11, 605, 37);
+			contentPane.add(lblNewLabel);
+		}
+		{
+			lblNewLabel_1 = new JLabel("Tipo de Botella : ");
+			lblNewLabel_1.setBounds(27, 88, 101, 21);
+			contentPane.add(lblNewLabel_1);
+		}
+		{
+			cboBotella = new JComboBox<Object>();
+			cboBotella.addActionListener(this);
+			cboBotella.setToolTipText("Seleccione ...");
+			cboBotella.setBounds(134, 87, 333, 22);
+			contentPane.add(cboBotella);
+		}
+		{
+			btnAdicionar = new JButton("Adicionar");
+			btnAdicionar.addActionListener(this);
+			btnAdicionar.setBounds(477, 87, 120, 22);
+			contentPane.add(btnAdicionar);
+		}
+		{
+			lblNewLabel_2 = new JLabel("Cantidad de Salida ");
+			lblNewLabel_2.setBounds(27, 136, 120, 21);
+			contentPane.add(lblNewLabel_2);
+		}
+		{
+			txtSalida = new JTextField();
+			txtSalida.setBounds(157, 135, 150, 22);
+			contentPane.add(txtSalida);
+			txtSalida.setColumns(10);
+		}
+		{
+			lblNewLabel_3 = new JLabel("Cantidad de  Ingreso ");
+			lblNewLabel_3.setBounds(27, 180, 120, 21);
+			contentPane.add(lblNewLabel_3);
+		}
+		{
+			txtIngreso = new JTextField();
+			txtIngreso.setBounds(157, 180, 150, 22);
+			contentPane.add(txtIngreso);
+			txtIngreso.setColumns(10);
+		}
+		{
+			lblNewLabel_4 = new JLabel("N\u00BA de guia");
+			lblNewLabel_4.setBounds(317, 139, 120, 18);
+			contentPane.add(lblNewLabel_4);
+		}
+		{
+			txtGuiaSalida = new JTextField();
+			txtGuiaSalida.setBounds(447, 136, 150, 20);
+			contentPane.add(txtGuiaSalida);
+			txtGuiaSalida.setColumns(10);
+		}
+		{
+			lblNewLabel_5 = new JLabel("N\u00BA de guia");
+			lblNewLabel_5.setBounds(317, 183, 120, 18);
+			contentPane.add(lblNewLabel_5);
+		}
+		{
+			txtGuiaIngreso = new JTextField();
+			txtGuiaIngreso.setBounds(447, 180, 150, 20);
+			contentPane.add(txtGuiaIngreso);
+			txtGuiaIngreso.setColumns(10);
+		}
+		{
+			btnRegistrar = new JButton("Registrar");
+			btnRegistrar.addActionListener(this);
+			btnRegistrar.setBounds(78, 228, 120, 23);
+			contentPane.add(btnRegistrar);
+		}
+		{
+			btnCancelar = new JButton("Cancelar");
+			btnCancelar.addActionListener(this);
+			btnCancelar.setBounds(252, 228, 120, 23);
+			contentPane.add(btnCancelar);
+		}
+		{
+			btnExportar = new JButton("Exportar");
+			btnExportar.addActionListener(this);
+			btnExportar.setBounds(427, 228, 120, 23);
+			contentPane.add(btnExportar);
+		}
+		{
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(27, 279, 571, 177);
+			contentPane.add(scrollPane);
+			{
+				tbRegistro = new JTable();
+				scrollPane.setViewportView(tbRegistro);
+			}
+		}
 
 		this.llenarCabecera();
 		this.llenarDatosTabla();
 		this.llenarDatosCombo();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAdicionar) {
 			Ib.show();
 		}
-
 		if (e.getSource() == cboBotella) {
+			
+			llenarDatosCombo();
 			filtarDatosXCombo(cboBotella.getSelectedIndex());
+		}
+		if (e.getSource() == btnRegistrar) {
+			int grabo = grabar();
+			if (grabo == 1)
+				mostrarmensaje("si registro");
+			else
+				mostrarmensaje("que pena");
+			this.llenarDatosTabla();
+			this.limpiarFormulario();
+		}
+		if (e.getSource() == btnCancelar) {
+			cancelar();
 		}
 		if (e.getSource() == btnExportar) {
 			try {
@@ -194,20 +229,6 @@ public class Insumos_Serigrafico implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}
-		if (e.getSource() == btnCancelar) {
-			cancelar();
-			
-		}
-		if (e.getSource() == btnRegistrar) {
-
-			int grabo = grabar();
-			if (grabo == 1)
-				mostrarmensaje("si registro");
-			else
-				mostrarmensaje("que pena");
-			this.llenarDatosTabla();
-			this.limpiarFormulario();
 		}
 
 	}
@@ -280,11 +301,12 @@ public class Insumos_Serigrafico implements ActionListener {
 	public void llenarDatosCombo() {
 		ArrayList<insumo> listar = obj.ComboInsumo();
 
-		//cboBotella.removeAllItems();
-		for (insumo ins : listar) {
-			cboBotella.addItem(ins.getDescripcion());
+		for (int i = 0; i < listar.size(); i++) {
+			cboBotella.addItem(listar.get(i).getDescripcion());
 		}
-
+		/*
+		 * for (insumo ins : listar) { cboBotella.addItem(ins.getDescripcion()); }
+		 */
 	}
 
 	private void filtarDatosXCombo(int combo) {
@@ -310,22 +332,22 @@ public class Insumos_Serigrafico implements ActionListener {
 		chooser.setFileFilter(filter);
 		chooser.setDialogTitle("Guardar archivo");
 		chooser.setAcceptAllFileFilterUsed(false);
-		
+
 		if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 			String ruta = chooser.getSelectedFile().toString().concat(".xls");
 			try {
-				
+
 				File archivoXLS = new File(ruta);
 				if (archivoXLS.exists()) {
 					archivoXLS.delete();
 				}
-				
+
 				archivoXLS.createNewFile();
 				Workbook libro = new HSSFWorkbook();
 				FileOutputStream archivo = new FileOutputStream(archivoXLS);
 				Sheet hoja = libro.createSheet("Mi hoja de trabajo 1");
 				hoja.setDisplayGridlines(false);
-				
+
 				for (int f = 0; f < tbRegistro.getRowCount(); f++) {
 					Row fila = hoja.createRow(f);
 					for (int c = 0; c < tbRegistro.getColumnCount(); c++) {
@@ -335,15 +357,15 @@ public class Insumos_Serigrafico implements ActionListener {
 						}
 					}
 				}
-				
+
 				int filaInicio = 1;
 				for (int f = 0; f < tbRegistro.getRowCount(); f++) {
 					Row fila = hoja.createRow(filaInicio);
 					filaInicio++;
-					
+
 					for (int c = 0; c < tbRegistro.getColumnCount(); c++) {
 						Cell celda = fila.createCell(c);
-						
+
 						if (tbRegistro.getValueAt(f, c) instanceof Double) {
 							celda.setCellValue(Double.parseDouble(tbRegistro.getValueAt(f, c).toString()));
 						} else if (tbRegistro.getValueAt(f, c) instanceof Float) {
@@ -353,17 +375,16 @@ public class Insumos_Serigrafico implements ActionListener {
 						}
 					}
 				}
-				
+
 				libro.write(archivo);
 				archivo.close();
 				Desktop.getDesktop().open(archivoXLS);
-				
-			} catch (IOException | 	NumberFormatException	e) {
-				// TODO: handle 
+
+			} catch (IOException | NumberFormatException e) {
+				// TODO: handle
 				throw e;
-			} 
+			}
 		}
 
 	}
-
 }
