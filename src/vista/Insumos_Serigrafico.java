@@ -198,7 +198,6 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 		this.llenarCabecera();
 		this.llenarDatosTabla();
-		this.llenarDatosCombo();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -206,8 +205,6 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 			Ib.show();
 		}
 		if (e.getSource() == cboBotella) {
-			
-			llenarDatosCombo();
 			filtarDatosXCombo(cboBotella.getSelectedIndex());
 		}
 		if (e.getSource() == btnRegistrar) {
@@ -268,7 +265,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 	private void limpiarFormulario() {
 
-		cboBotella.setSelectedIndex(0);
+		cboBotella.setSelectedIndex(-1);
 		txtSalida.setText("");
 		txtGuiaSalida.setText("");
 		txtIngreso.setText("");
@@ -299,14 +296,15 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 	}
 
 	public void llenarDatosCombo() {
+		
 		ArrayList<insumo> listar = obj.ComboInsumo();
-
-		for (int i = 0; i < listar.size(); i++) {
+		cboBotella.removeAllItems();
+		/*for (int i = 0; i < listar.size(); i++) {
 			cboBotella.addItem(listar.get(i).getDescripcion());
 		}
-		/*
-		 * for (insumo ins : listar) { cboBotella.addItem(ins.getDescripcion()); }
-		 */
+	*/	
+		  for (insumo ins : listar) { cboBotella.addItem(ins.getDescripcion()); }
+	
 	}
 
 	private void filtarDatosXCombo(int combo) {
