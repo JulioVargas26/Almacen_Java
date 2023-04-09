@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import entidad.serigrafiado;
+import util.ConexionAccess;
 import util.ConexionMySql;
 
 public class SerigrafiadoAction {
@@ -17,8 +18,9 @@ public class SerigrafiadoAction {
 	public int IngresarSerigrafiado(serigrafiado s) {
 		int salida = 0;
 
-		Connection cn = new ConexionMySql().getConexion();
-
+		Connection cn = new ConexionAccess().getConexion();
+		//Connection cn = new ConexionMySql().getConexion();
+		
 		PreparedStatement pstm = null;
 		// 1. Control de excepciones
 		try {
@@ -61,8 +63,9 @@ public class SerigrafiadoAction {
 	public ArrayList<serigrafiado> ListarSerigrafiado() {
 		ArrayList<serigrafiado> lista = new ArrayList<serigrafiado>();
 
-		Connection cn = new ConexionMySql().getConexion();
-
+		Connection cn = new ConexionAccess().getConexion();
+		//Connection cn = new ConexionMySql().getConexion();
+		
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 		try {
@@ -100,7 +103,8 @@ public class SerigrafiadoAction {
 	public ArrayList<serigrafiado> filtroxInsumo(int id) {
 		ArrayList<serigrafiado> list = null;
 
-		Connection cn = new ConexionMySql().getConexion();
+		Connection cn = new ConexionAccess().getConexion();
+		//Connection cn = new ConexionMySql().getConexion();
 
 		PreparedStatement pstm = null;
 		ResultSet rs = null;

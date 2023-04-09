@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import entidad.insumo;
+import util.ConexionAccess;
 import util.ConexionMySql;
 
 public class InsumoAction {
@@ -18,8 +19,8 @@ public class InsumoAction {
 	public int ingresarInsumo(insumo i){
 		int ingresar = -1;
 		
-		//Connection cn = new ConexionAccess().getConexion();
-		Connection cn = new ConexionMySql().getConexion();
+		Connection cn = new ConexionAccess().getConexion();
+		//Connection cn = new ConexionMySql().getConexion();
 		
 		PreparedStatement pstm = null;
 		
@@ -58,8 +59,8 @@ public class InsumoAction {
 	public ArrayList<insumo> listarInsumo(){
 		ArrayList<insumo> lista = new ArrayList<insumo>();
 		
-		//Connection cn = new ConexionAccess().getConexion();
-		Connection cn = new ConexionMySql().getConexion();
+		Connection cn = new ConexionAccess().getConexion();
+		//Connection cn = new ConexionMySql().getConexion();
 		
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
