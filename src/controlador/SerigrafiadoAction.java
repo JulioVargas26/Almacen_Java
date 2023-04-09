@@ -6,9 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entidad.insumo;
 import entidad.serigrafiado;
-import util.ConexionAccess;
+import util.ConexionMySql;
 
 public class SerigrafiadoAction {
 
@@ -18,31 +17,28 @@ public class SerigrafiadoAction {
 	public int IngresarSerigrafiado(serigrafiado s) {
 		int salida = 0;
 
-		// 1. Declarar variables
-		Connection conn = null;
-		PreparedStatement pstm = null;
+		Connection cn = new ConexionMySql().getConexion();
 
-		// 2. Control de excepciones
+		PreparedStatement pstm = null;
+		// 1. Control de excepciones
 		try {
-			// 3. Definir la sentencia SQL
+			// 2. Definir la sentencia SQL
 			String sql = "INSERT INTO tb_serigrafiado VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
 
-			// 4. Obtener la conexion
-			conn = new ConexionAccess().getConexion();
+			// 3. Obtener un PreparedStatement de la conexi�n
+			pstm = cn.prepareStatement(sql);
 
-			// 5. Obtener un PreparedStatement de la conexi�n
-			pstm = conn.prepareStatement(sql);
+			// 4. Agregar parametros
 
-			// 6. Agregar parametros
-			pstm.setInt(1, s.getInsumo());
-			pstm.setInt(2, s.getCantSalida());
-			pstm.setString(3, s.getGuiaSalida());
-			pstm.setInt(4, s.getCantIngreso());
-			pstm.setString(5, s.getGuiaIngreso());
-			pstm.setInt(6, s.getMerma());
-			pstm.setString(7, s.getFecha());
+			pstm.setInt(1, s.getCantSalida());
+			pstm.setString(2, s.getGuiaSalida());
+			pstm.setInt(3, s.getCantIngreso());
+			pstm.setString(4, s.getGuiaIngreso());
+			pstm.setInt(5, s.getMerma());
+			pstm.setString(6, s.getFecha());
+			pstm.setInt(7, s.getInsumo());
 
-			// 7. Ejecutar
+			// 5. Ejecutar
 			salida = pstm.executeUpdate();
 
 		} catch (Exception e) {
@@ -52,8 +48,8 @@ public class SerigrafiadoAction {
 			try {
 				if (pstm != null)
 					pstm.close();
-				if (conn != null)
-					conn.close();
+				if (cn != null)
+					cn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -61,23 +57,23 @@ public class SerigrafiadoAction {
 		return salida;
 
 	}
-	
-	public ArrayList<serigrafiado> ListarSerigrafiado(serigrafiado serigrafiado) {
+
+	public ArrayList<serigrafiado> ListarSerigrafiado() {
 		ArrayList<serigrafiado> lista = new ArrayList<serigrafiado>();
-		Connection cn = null;
+
+		Connection cn = new ConexionMySql().getConexion();
+
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
-
 		try {
 
-			cn = new ConexionAccess().getConexion();
 			String sql = "SELECT * FROM tb_serigrafiado";
 			pstm = cn.prepareStatement(sql);
 			rs = pstm.executeQuery();
 
 			while (rs.next()) {
-				serigrafiado obj = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4),
-						rs.getInt(5), rs.getString(6), rs.getInt(7), rs.getString(8));
+				serigrafiado obj = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
+						rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8));
 
 				lista.add(obj);
 
@@ -101,71 +97,28 @@ public class SerigrafiadoAction {
 		return lista;
 	}
 
-	public ArrayList<insumo> ComboInsumo() {
-		ArrayList<insumo> list = null;
-
-		Connection con = null;
-		PreparedStatement pstm = null;
-		ResultSet rs = null;
-
-		try {
-			con = new ConexionAccess().getConexion();
-
-			// Definir la sentencia SQL
-			String sql = "SELECT * FROM tb_insumo";
-
-			pstm = con.prepareStatement(sql);
-			rs = pstm.executeQuery();
-			
-			list = new ArrayList<insumo>();
-			while (rs.next()) {
-				insumo pst = new insumo(rs.getInt(1), rs.getString(2));
-
-				// TODO: Agregar la lectura del resultado de la consulta BD
-				list.add(pst);
-
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (pstm != null)
-					pstm.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return list;
-	}
-	
 	public ArrayList<serigrafiado> filtroxInsumo(int id) {
 		ArrayList<serigrafiado> list = null;
 
-		Connection con = null;
+		Connection cn = new ConexionMySql().getConexion();
+
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 
 		try {
-			con = new ConexionAccess().getConexion();
 
 			// Definir la sentencia SQL
-			String sql = "SELECT * FROM tb_serigrafiado where id_insumo = ?";
-			pstm = con.prepareStatement(sql);
+			String sql = "SELECT * FROM tb_serigrafiado where tipo_insumo = ?";
+			pstm = cn.prepareStatement(sql);
 			pstm.setInt(1, id);
 			rs = pstm.executeQuery();
 
 			list = new ArrayList<serigrafiado>();
 			while (rs.next()) {
-				serigrafiado pst = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4),
-						rs.getInt(5), rs.getString(6),rs.getInt(7), rs.getString(8));
+				serigrafiado pst = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
+						rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8));
 
-				// TODO: Agregar la lectura del resultado de la consulta BD
+				// Agregar la lectura del resultado de la consulta BD
 				list.add(pst);
 
 			}
@@ -178,8 +131,8 @@ public class SerigrafiadoAction {
 					rs.close();
 				if (pstm != null)
 					pstm.close();
-				if (con != null)
-					con.close();
+				if (cn != null)
+					cn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -187,7 +140,7 @@ public class SerigrafiadoAction {
 
 		return list;
 	}
+
 	
-	
-	
+
 }

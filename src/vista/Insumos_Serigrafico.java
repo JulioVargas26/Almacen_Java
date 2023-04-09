@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import controlador.InsumoAction;
 import controlador.SerigrafiadoAction;
 import entidad.insumo;
 import entidad.serigrafiado;
+import javax.swing.DefaultComboBoxModel;
 
 public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
@@ -64,13 +67,13 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 	DefaultTableModel model = new DefaultTableModel();
 	SerigrafiadoAction obj = new SerigrafiadoAction();
 	InsumoAction obj2 = new InsumoAction();
-	private ArrayList<serigrafiado> lista;
 	private int id_serigrafiado;
 	private int merma;
 	Insumos_Botella Ib = new Insumos_Botella();
 	DateTimeFormatter fecha = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 	private JScrollPane scrollPane;
 	private JTable tbRegistro;
+	private ArrayList<serigrafiado> lista;
 
 	/**
 	 * Launch the application.
@@ -113,8 +116,9 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 		}
 		{
 			cboBotella = new JComboBox<Object>();
+			cboBotella.setModel(new DefaultComboBoxModel(new String[] {"Seleccione ..."}));
 			cboBotella.addActionListener(this);
-			cboBotella.setToolTipText("Seleccione ...");
+			cboBotella.setToolTipText("");
 			cboBotella.setBounds(134, 87, 333, 22);
 			contentPane.add(cboBotella);
 		}
@@ -198,6 +202,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 		this.llenarCabecera();
 		this.llenarDatosTabla();
+		this.llenarDatosCombo();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -245,7 +250,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 		String guiaI = txtGuiaIngreso.getText();
 		merma = cantIngresos - cantSalidas;
 
-		serigrafiado s = new serigrafiado(id_serigrafiado, 0, 0, null, 0, null, 0, null);
+		serigrafiado s = new serigrafiado(id_serigrafiado, 0, null, 0, null, 0, null, 0);
 
 		s.setInsumo(botella);
 		s.setCantSalida(cantSalidas);
@@ -285,7 +290,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 	private void llenarDatosTabla() {
 		model.setRowCount(0);
-		lista = obj.ListarSerigrafiado(null);
+		lista = obj.ListarSerigrafiado();
 		for (serigrafiado p : lista) {
 			Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
 					p.getGuiaIngreso(), p.getMerma()
@@ -297,8 +302,8 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 	public void llenarDatosCombo() {
 		
-		ArrayList<insumo> listar = obj.ComboInsumo();
-		cboBotella.removeAllItems();
+		ArrayList<insumo> listar = obj2.listarInsumo();
+		//cboBotella.removeAllItems();
 		/*for (int i = 0; i < listar.size(); i++) {
 			cboBotella.addItem(listar.get(i).getDescripcion());
 		}

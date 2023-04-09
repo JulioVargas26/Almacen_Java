@@ -36,8 +36,9 @@ public class Insumos_Botella extends JFrame implements ActionListener {
 
 	DefaultTableModel model = new DefaultTableModel();
 	InsumoAction obj = new InsumoAction();
-	private ArrayList<insumo> lista;
+	
 	private int cod_insumo;
+	private ArrayList<insumo> lista;
 
 	/**
 	 * Launch the application.
@@ -142,7 +143,7 @@ public class Insumos_Botella extends JFrame implements ActionListener {
 
 	private void llenarDatosTabla() {
 		model.setRowCount(0);
-		lista = obj.listarInsumo(null);
+		lista = obj.listarInsumo();
 		for (insumo p : lista) {
 			Object Fila[] = { p.getCod_insumo(), p.getDescripcion(), };
 			model.addRow(Fila);

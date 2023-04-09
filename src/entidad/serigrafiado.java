@@ -2,22 +2,28 @@ package entidad;
 
 public class serigrafiado {
 	
-	public int id_serigrafiado,insumo,cantSalida,cantIngreso,merma;
-	public String guiaSalida,guiaIngreso;
+	public int id_serigrafiado;
+	public int cantSalida;
+	public String guiaSalida;
+	public int cantIngreso;
+	public String guiaIngreso;
+	public int merma;
 	public String fecha;
+	public int insumo;
 
-	public serigrafiado(int id_serigrafiado, int insumo, int cantSalida, String guiaSalida, int cantIngreso, String guiaIngreso,
-			int merma, String fecha) {
+	public serigrafiado(int id_serigrafiado, int cantSalida, String guiaSalida, int cantIngreso, String guiaIngreso,
+			int merma, String fecha, int insumo) {
+		super();
 		this.id_serigrafiado = id_serigrafiado;
-		this.insumo = insumo;
 		this.cantSalida = cantSalida;
 		this.guiaSalida = guiaSalida;
 		this.cantIngreso = cantIngreso;
 		this.guiaIngreso = guiaIngreso;
 		this.merma = merma;
 		this.fecha = fecha;
+		this.insumo = insumo;
 	}
-	
+
 	public int getId_serigrafiado() {
 		return id_serigrafiado;
 	}
@@ -78,11 +84,9 @@ public class serigrafiado {
 		return fecha;
 	}
 
-	public void setFecha(String string) {
-		this.fecha = string;
+	public void setFecha(String fecha) {
+		this.fecha = fecha;
 	}
-
-	
 
 	
 

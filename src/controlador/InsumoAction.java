@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import entidad.insumo;
-import util.ConexionAccess;
+import util.ConexionMySql;
 
 public class InsumoAction {
 	
@@ -17,15 +17,17 @@ public class InsumoAction {
 		
 	public int ingresarInsumo(insumo i){
 		int ingresar = -1;
-		Connection cn = null;
+		
+		//Connection cn = new ConexionAccess().getConexion();
+		Connection cn = new ConexionMySql().getConexion();
+		
 		PreparedStatement pstm = null;
 		
 		try {
-			cn = new ConexionAccess().getConexion();
 			
 			cn.setAutoCommit(false);
 			
-			String sql = "insert into tb_insumo values(null,?)";
+			String sql = "insert into tb_tipo_insumo values(null,?)";
 			pstm = cn.prepareStatement(sql);
 			pstm.setString(1, i.getDescripcion());
 			
@@ -53,16 +55,18 @@ public class InsumoAction {
 		return ingresar;
 	}
 	
-	public ArrayList<insumo> listarInsumo(insumo insumo){
+	public ArrayList<insumo> listarInsumo(){
 		ArrayList<insumo> lista = new ArrayList<insumo>();
-		Connection cn = null;
+		
+		//Connection cn = new ConexionAccess().getConexion();
+		Connection cn = new ConexionMySql().getConexion();
+		
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 		
 		try{
-			
-			cn = new ConexionAccess().getConexion();
-			String sql = "SELECT * FROM tb_insumo";
+
+			String sql = "SELECT * FROM tb_tipo_insumo";
 			pstm = cn.prepareStatement(sql);
 			rs = pstm.executeQuery();
 			
