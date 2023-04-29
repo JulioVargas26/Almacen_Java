@@ -32,13 +32,13 @@ public class SerigrafiadoAction {
 
 			// 4. Agregar parametros
 
-			pstm.setInt(1, s.getCantSalida());
-			pstm.setString(2, s.getGuiaSalida());
-			pstm.setInt(3, s.getCantIngreso());
-			pstm.setString(4, s.getGuiaIngreso());
-			pstm.setInt(5, s.getMerma());
-			pstm.setString(6, s.getFecha());
-			pstm.setInt(7, s.getInsumo());
+			pstm.setInt(1, s.getInsumo());
+			pstm.setInt(2, s.getCantSalida());
+			pstm.setString(3, s.getGuiaSalida());
+			pstm.setInt(4, s.getCantIngreso());
+			pstm.setString(5, s.getGuiaIngreso());
+			pstm.setInt(6, s.getMerma());
+			pstm.setString(7, s.getFecha());
 
 			// 5. Ejecutar
 			salida = pstm.executeUpdate();
@@ -75,8 +75,8 @@ public class SerigrafiadoAction {
 			rs = pstm.executeQuery();
 
 			while (rs.next()) {
-				serigrafiado obj = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
-						rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8));
+				serigrafiado obj = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4),
+						rs.getInt(5), rs.getString(6), rs.getInt(7), rs.getString(8));
 
 				lista.add(obj);
 
@@ -119,9 +119,8 @@ public class SerigrafiadoAction {
 
 			list = new ArrayList<serigrafiado>();
 			while (rs.next()) {
-				serigrafiado pst = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
-						rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8));
-
+				serigrafiado pst = new serigrafiado(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4),
+						rs.getInt(5), rs.getString(6), rs.getInt(7), rs.getString(8));
 				// Agregar la lectura del resultado de la consulta BD
 				list.add(pst);
 

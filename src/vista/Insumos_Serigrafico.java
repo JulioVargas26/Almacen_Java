@@ -254,7 +254,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 		String guiaI = txtGuiaIngreso.getText();
 		merma = cantIngresos - cantSalidas;
 
-		serigrafiado s = new serigrafiado(id_serigrafiado, 0, null, 0, null, 0, null, 0);
+		serigrafiado s = new serigrafiado(id_serigrafiado, 0, 0, null, 0, null, 0, null);
 
 		s.setInsumo(botella);
 		s.setCantSalida(cantSalidas);
