@@ -74,6 +74,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 	private JScrollPane scrollPane;
 	private JTable tbRegistro;
 	private ArrayList<serigrafiado> lista;
+	private ArrayList<insumo> listar;
 
 	/**
 	 * Launch the application.
@@ -116,7 +117,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 		}
 		{
 			cboBotella = new JComboBox<Object>();
-			cboBotella.setModel(new DefaultComboBoxModel(new String[] {"Seleccione ..."}));
+			cboBotella.setModel(new DefaultComboBoxModel(new String[] { "Seleccione ..." }));
 			cboBotella.addActionListener(this);
 			cboBotella.setToolTipText("");
 			cboBotella.setBounds(134, 87, 333, 22);
@@ -207,22 +208,30 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAdicionar) {
-			Ib.show();
+			Ib.setVisible(true);
 		}
 		if (e.getSource() == cboBotella) {
-			filtarDatosXCombo(cboBotella.getSelectedIndex());
+			int combo = cboBotella.getSelectedIndex();
+
+			if (combo != 0)
+				filtarDatosXCombo(cboBotella.getSelectedIndex());
+			else
+				llenarDatosTabla();
 		}
 		if (e.getSource() == btnRegistrar) {
 			int grabo = grabar();
+
 			if (grabo == 1)
 				mostrarmensaje("si registro");
 			else
 				mostrarmensaje("que pena");
+
 			this.llenarDatosTabla();
 			this.limpiarFormulario();
 		}
 		if (e.getSource() == btnCancelar) {
-			cancelar();
+			this.limpiarFormulario();
+			this.llenarDatosTabla();
 		}
 		if (e.getSource() == btnExportar) {
 			try {
@@ -233,11 +242,6 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 			}
 		}
 
-	}
-
-	private void cancelar() {
-		this.limpiarFormulario();
-		this.llenarDatosTabla();
 	}
 
 	private int grabar() {
@@ -270,7 +274,7 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 
 	private void limpiarFormulario() {
 
-		cboBotella.setSelectedIndex(-1);
+		cboBotella.setSelectedIndex(0);
 		txtSalida.setText("");
 		txtGuiaSalida.setText("");
 		txtIngreso.setText("");
@@ -291,25 +295,19 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 	private void llenarDatosTabla() {
 		model.setRowCount(0);
 		lista = obj.ListarSerigrafiado();
+
 		for (serigrafiado p : lista) {
 			Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
-					p.getGuiaIngreso(), p.getMerma()
-
-			};
+					p.getGuiaIngreso(), p.getMerma() };
 			model.addRow(Fila);
 		}
 	}
 
 	public void llenarDatosCombo() {
-		
-		ArrayList<insumo> listar = obj2.listarInsumo();
-		//cboBotella.removeAllItems();
-		/*for (int i = 0; i < listar.size(); i++) {
-			cboBotella.addItem(listar.get(i).getDescripcion());
-		}
-	*/	
-		  for (insumo ins : listar) { cboBotella.addItem(ins.getDescripcion()); }
-	
+		cboBotella.removeAllItems();
+		cboBotella.setSelectedItem("SEleccion");
+		listar = obj2.listarInsumo();
+		listar.forEach(ins -> cboBotella.addItem(ins.getDescripcion()));
 	}
 
 	private void filtarDatosXCombo(int combo) {
@@ -317,11 +315,11 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 		model.setRowCount(0);
 		lista = obj.filtroxInsumo(combo);
 		for (serigrafiado p : lista) {
-			Object Fila[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
+			Object Fila1[] = { p.getFecha(), p.getCantSalida(), p.getGuiaSalida(), p.getCantIngreso(),
 					p.getGuiaIngreso(), p.getMerma()
 
 			};
-			model.addRow(Fila);
+			model.addRow(Fila1);
 		}
 	}
 
@@ -390,4 +388,5 @@ public class Insumos_Serigrafico extends JFrame implements ActionListener {
 		}
 
 	}
+
 }

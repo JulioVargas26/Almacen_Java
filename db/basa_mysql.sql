@@ -15,10 +15,7 @@ DROP SCHEMA IF EXISTS `basa_mysql` ;
 -- -----------------------------------------------------
 -- Schema basa_mysql
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `basa_mysql` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
--- -----------------------------------------------------
--- Schema clinica_kvbe_2023_1
--- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `basa_mysql` DEFAULT CHARACTER SET utf8mb3 ;
 USE `basa_mysql` ;
 
 -- -----------------------------------------------------
@@ -28,11 +25,11 @@ DROP TABLE IF EXISTS `basa_mysql`.`tb_tipo_insumo` ;
 
 CREATE TABLE IF NOT EXISTS `basa_mysql`.`tb_tipo_insumo` (
   `id_insumo` INT NOT NULL AUTO_INCREMENT,
-  `descripcion` VARCHAR(100) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`id_insumo`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
@@ -48,15 +45,15 @@ CREATE TABLE IF NOT EXISTS `basa_mysql`.`tb_serigrafiado` (
   `guia_Ingreso` VARCHAR(45) NULL DEFAULT NULL,
   `merma` INT NULL DEFAULT NULL,
   `fecha` DATE NULL DEFAULT NULL,
-  `tipo_insumo` INT NULL DEFAULT NULL,
+  `tipo_insumo` INT NOT NULL,
   PRIMARY KEY (`id_serigrafiado`),
-  INDEX `fk_tipo_serigrafiado` (`tipo_insumo` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_serigrafiado_tb_tipo_insumo`
+  INDEX `FK_001_idx` (`tipo_insumo` ASC) VISIBLE,
+  CONSTRAINT `FK_001`
     FOREIGN KEY (`tipo_insumo`)
     REFERENCES `basa_mysql`.`tb_tipo_insumo` (`id_insumo`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
